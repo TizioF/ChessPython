@@ -1,3 +1,16 @@
+import pygame
+
+pygame.init() #initialize the package
+
+WIDTH = 1000
+HEIGHT = 900
+screen = pygame.display.set_mode([WIDTH, HEIGHT]) #setting up game display
+font = pygame.font.Font('freesansbold.ttf', 20)
+timer = pygame.time.Clock()
+fps=60
+
+
+
 class Piece:
     """Base class for all chess pieces."""
 
