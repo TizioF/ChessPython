@@ -9,6 +9,35 @@ font = pygame.font.Font('freesansbold.ttf', 20)
 timer = pygame.time.Clock()
 fps=60
 
+#load images in game
+DEFAULT_IMAGE_SIZE=(80,80)
+black_pawn= pygame.image.load('images/black pawn.png')
+black_pawn=pygame.transform.scale(black_pawn,DEFAULT_IMAGE_SIZE) #load and scale piece image
+black_rook= pygame.image.load('images/black rook.png')
+black_rook=pygame.transform.scale(black_rook,DEFAULT_IMAGE_SIZE)
+black_bishop= pygame.image.load('images/black bishop.png')
+black_bishop=pygame.transform.scale(black_bishop,DEFAULT_IMAGE_SIZE)
+black_knight= pygame.image.load('images/black knight.png')
+black_knight=pygame.transform.scale(black_knight,DEFAULT_IMAGE_SIZE)
+black_queen= pygame.image.load('images/black queen.png')
+black_queen=pygame.transform.scale(black_queen,DEFAULT_IMAGE_SIZE)
+black_king= pygame.image.load('images/black king.png')
+black_king=pygame.transform.scale(black_king,DEFAULT_IMAGE_SIZE)
+white_pawn=pygame.image.load('images/white pawn.png')
+white_pawn=pygame.transform.scale(white_pawn, DEFAULT_IMAGE_SIZE)
+white_rook=pygame.image.load('images/white rook.png')
+white_rook=pygame.transform.scale(white_rook, DEFAULT_IMAGE_SIZE)
+white_bishop=pygame.image.load('images/white bishop.png')
+white_bishop=pygame.transform.scale(white_bishop, DEFAULT_IMAGE_SIZE)
+white_knight=pygame.image.load('images/white knight.png')
+white_knight=pygame.transform.scale(white_knight, DEFAULT_IMAGE_SIZE)
+white_queen=pygame.image.load('images/white queen.png')
+white_queen=pygame.transform.scale(white_queen, DEFAULT_IMAGE_SIZE)
+white_king=pygame.image.load('images/white king.png')
+white_king=pygame.transform.scale(white_king, DEFAULT_IMAGE_SIZE)
+
+
+
 
 
 class Piece:
