@@ -1,6 +1,6 @@
-
 class Piece:
     """Base class for all chess pieces."""
+
     def __init__(self, color):
         self.color = color  # 'white' or 'black'
 
@@ -26,7 +26,7 @@ class Pawn(Piece):
                 target = board[x + direction][y + dx]
                 if target and target.color != self.color:
                     moves.append((x + direction, y + dx))
-        
+
         return moves
 
 
@@ -48,7 +48,7 @@ class Rook(Piece):
                     break
                 else:
                     break
-        
+
         return moves
 
 
@@ -64,7 +64,7 @@ class Knight(Piece):
             nx, ny = x + dx, y + dy
             if 0 <= nx < 8 and 0 <= ny < 8 and (board[nx][ny] is None or board[nx][ny].color != self.color):
                 moves.append((nx, ny))
-        
+
         return moves
 
 
@@ -111,8 +111,10 @@ class King(Piece):
 
         return moves
 
+
 class Board:
     """Class to represent the chessboard."""
+
     def __init__(self):
         self.grid = self.initialize_board()
 
@@ -140,7 +142,10 @@ class Board:
         for row in self.grid:
             print(" ".join([piece.__class__.__name__[0] if piece else '.' for piece in row]))
         print()
+
+
 from board import Board
+
 
 def game_loop():
     """Main game loop."""
@@ -154,6 +159,7 @@ def game_loop():
             move = input("Enter your move (e.g., e2 to e4): ")
             print(f"Processing move: {move}")
             board.display()  # Placeholder for move execution
+
 
 if __name__ == "__main__":
     game_loop()
