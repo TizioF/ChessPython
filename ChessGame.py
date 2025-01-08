@@ -36,8 +36,6 @@ white_queen=pygame.transform.scale(white_queen, DEFAULT_IMAGE_SIZE)
 white_king=pygame.image.load('images/white king.png')
 white_king=pygame.transform.scale(white_king, DEFAULT_IMAGE_SIZE)
 
-#game loop and close window on quit
-run=True
 
 
 def draw_board():
@@ -50,6 +48,8 @@ def draw_board():
             pygame.draw.rect(screen, 'light gray', [700 - (column * 200), row * 100, 100, 100])
     pass
 
+#game loop and close window on quit
+run=True
 
 while run:
     timer.tick(fps)
