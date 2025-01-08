@@ -36,6 +36,14 @@ white_queen=pygame.transform.scale(white_queen, DEFAULT_IMAGE_SIZE)
 white_king=pygame.image.load('images/white king.png')
 white_king=pygame.transform.scale(white_king, DEFAULT_IMAGE_SIZE)
 
+#game loop and close window on quit
+run=True
+while run:
+    timer.tick(fps)
+
+    for event in pygame.event.get():
+        if event.type==pygame.QUIT:
+            run=False
 
 
 
@@ -154,54 +162,13 @@ class King(Piece):
         return moves
 
 
-class Board:
-    """Class to represent the chessboard."""
-
-    def __init__(self):
-        self.grid = self.initialize_board()
-
-    def initialize_board(self):
-        """Set up the chessboard with pieces in their starting positions."""
-        board = [[None for _ in range(8)] for _ in range(8)]
-
-        # Add pawns
-        for col in range(8):
-            board[1][col] = Pawn('white')
-            board[6][col] = Pawn('black')
-
-        # Add Rooks (example)
-        board[0][0] = Rook('white')
-        board[0][7] = Rook('white')
-        board[7][0] = Rook('black')
-        board[7][7] = Rook('black')
-
-        # Add other pieces as needed...
-
-        return board
-
-    def display(self):
-        """Print the current state of the board."""
-        for row in self.grid:
-            print(" ".join([piece.__class__.__name__[0] if piece else '.' for piece in row]))
-        print()
+def draw_board():
+    for i in range(32):
+        column= i % 4
+        row= i // 4
+        if row % 2 == 0:
+            pygame.draw.rect(screen, 'light gray', [600 - (column * 200)], row * 100, 100, 100)
+        else:
+            pygame.draw.rect(screen, 'light gray', [700 - (column * 200)], row * 100, 100, 100)
 
 
-from board import Board
-
-
-def game_loop():
-    """Main game loop."""
-    board = Board()
-    board.display()
-
-    while True:
-        # Alternate between white and black players
-        for player in ['white', 'black']:
-            print(f"{player}'s turn")
-            move = input("Enter your move (e.g., e2 to e4): ")
-            print(f"Processing move: {move}")
-            board.display()  # Placeholder for move execution
-
-
-if __name__ == "__main__":
-    game_loop()
