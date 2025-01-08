@@ -38,9 +38,23 @@ white_king=pygame.transform.scale(white_king, DEFAULT_IMAGE_SIZE)
 
 #game loop and close window on quit
 run=True
+
+
+def draw_board():
+    for i in range(32):
+        column = i % 4
+        row = i // 4
+        if row % 2 == 0:
+            pygame.draw.rect(screen, 'light gray', [600 - (column * 200), row * 100, 100, 100])
+        else:
+            pygame.draw.rect(screen, 'light gray', [700 - (column * 200), row * 100, 100, 100])
+    pass
+
+
 while run:
     timer.tick(fps)
     screen.fill('dark gray')
+    draw_board()
 
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
@@ -165,15 +179,4 @@ class King(Piece):
                 moves.append((nx, ny))
 
         return moves
-
-
-def draw_board():
-    for i in range(32):
-        column = i % 4
-        row = i // 4
-        if row % 2 == 0:
-            pygame.draw.rect(screen, 'light gray', [600 - (column * 200), row * 100, 100, 100])
-        else:
-            pygame.draw.rect(screen, 'light gray', [700 - (column * 200), row * 100, 100, 100])
-
 
