@@ -9,6 +9,16 @@ font = pygame.font.Font('freesansbold.ttf', 20)
 timer = pygame.time.Clock()
 fps=60
 
+#game variables
+white_pieces = ['rook','knight','bishop','king','queen','bishop','knight','rook',
+                'pawn','pawn','pawn','pawn','pawn','pawn','pawn','pawn'] #pieces on the board
+w_location= [(0,0), (1,0), (2,0), (3,0), (4,0), (5,0), (6,0), (7,0),
+             (0,1), (1,1), (2,1), (3,1), (4,1), (5,1), (6,1), (7,1)] #location of the pieces
+black_pieces = ['rook','knight','bishop','king','queen','bishop','knight','rook',
+                'pawn','pawn','pawn','pawn','pawn','pawn','pawn','pawn']
+b_location= [(0,7), (1,7), (2,7), (3,7), (4,7), (5,7), (6,7), (7,7),
+             (0,6), (1,6), (2,6), (3,6), (4,6), (5,6), (6,6), (7,6)]
+
 #load images in game
 DEFAULT_IMAGE_SIZE=(80,80)
 black_pawn= pygame.image.load('images/black pawn.png')
@@ -48,20 +58,6 @@ def draw_board():
             pygame.draw.rect(screen, 'light gray', [700 - (column * 200), row * 100, 100, 100])
     pass
 
-#game loop and close window on quit
-run=True
-
-while run:
-    timer.tick(fps)
-    screen.fill('dark gray')
-    draw_board()
-
-    for event in pygame.event.get():
-        if event.type==pygame.QUIT:
-            run=False
-
-    pygame.display.flip() #displays on screen
-pygame.quit()
 
 
 
@@ -180,3 +176,17 @@ class King(Piece):
 
         return moves
 
+#game loop and close window on quit
+run=True
+
+while run:
+    timer.tick(fps)
+    screen.fill('dark gray')
+    draw_board()
+
+    for event in pygame.event.get():
+        if event.type==pygame.QUIT:
+            run=False
+
+    pygame.display.flip() #displays on screen
+pygame.quit()
