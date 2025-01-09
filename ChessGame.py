@@ -46,6 +46,9 @@ white_queen=pygame.transform.scale(white_queen, DEFAULT_IMAGE_SIZE)
 white_king=pygame.image.load('images/white king.png')
 white_king=pygame.transform.scale(white_king, DEFAULT_IMAGE_SIZE)
 
+w_images=[white_pawn,white_queen,white_king,white_knight,white_rook,white_bishop]
+b_images=[black_pawn,black_queen,black_king,black_knight,black_rook,black_bishop]
+piece_list=['pawn','queen','king','knight','rook','bishop'] #list to know the index of the piece
 
 
 def draw_board():
@@ -59,8 +62,15 @@ def draw_board():
     pass
 
 
+#visualize pieces on board
+def visualize_piece():
+    for i in range(len(white_pieces)):
+        x = piece_list.index(white_pieces[i])
+        screen.blit(w_images[x],(w_location[i][0]*100+10, w_location[i][1]*100+10)) #visualize piece on board and offsets it to the center of the square
 
-
+    for i in range(len(black_pieces)):
+        x = piece_list.index(black_pieces[i])
+        screen.blit(b_images[x], (b_location[i][0] * 100 + 10, b_location[i][1] * 100 + 10))
 
 
 class Piece:
@@ -183,6 +193,7 @@ while run:
     timer.tick(fps)
     screen.fill('dark gray')
     draw_board()
+    visualize_piece()
 
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
