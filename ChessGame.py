@@ -183,7 +183,7 @@ class Knight(Piece):
         for dx, dy in [(2, 1), (2, -1), (-2, 1), (-2, -1),
                        (1, 2), (1, -2), (-1, 2), (-1, -2)]:
             nx, ny = x + dx, y + dy
-            if 0 <= nx < 8 and 0 <= ny < 8 and (board[nx][ny] is None or board[nx][ny].color != self.color):
+            if 0 <= nx < 8 and 0 <= ny < 8 and (board.get_piece_at((nx,ny)) is None or board.get_piece_at((nx,ny)).color != self.color):
                 moves.append((nx, ny))
 
         return moves
