@@ -78,7 +78,6 @@ def check(board, color):
 
     # If any opponent piece can attack the player's king position, it's check
     if king_pos in moves:
-        print("Check!")
         return True, king_pos, moves
     return False, king_pos, moves
 
@@ -270,6 +269,10 @@ def draw_board():
             pygame.draw.rect(screen, 'light gray', [700 - (column * 200), row * 100, 100, 100])
     pass
 
+def draw_valid_moves(valid_moves):
+    for move in valid_moves:
+        col, row = move
+        pygame.draw.circle(screen, 'yellow', (col * 100 + 50, row * 100 + 50),10)  # Draw circle in the center of the square
 
 # visualize pieces on board
 def visualize_piece():
@@ -284,33 +287,27 @@ def visualize_piece():
 
 selected_piece = None
 selected_pos = None
-
+valid_moves=[]
 
 # Handle Mouse Clicks and Piece Capture
 def handle_click(pos):
-    global selected_piece, selected_pos, current_player
-    # print(current_player)
-    # print(pos)
+    global selected_piece, selected_pos, current_player, valid_moves
+
     col, row = pos[0] // 100, pos[1] // 100
-    print(col)
-    print(row)
-    print(board.get_piece_at((col, row)))
-    # print(board.get_piece_at((col,row)))
+
     if selected_piece is None:
         piece = board.get_piece_at((col, row))
         if piece and piece.color == current_player:
             selected_piece = piece
             selected_pos = piece.position
-            print('clicked piece!')
-            print(selected_piece.type)
+
+            valid_moves = selected_piece.valid_moves(selected_pos, board)
     else:
-        print('enter the else to move')
+        valid_moves=[]
 
         if (col, row) in selected_piece.valid_moves(selected_pos, board):
             # Capture the opponent's piece
-            print('enter the if')
             target_piece = board.get_piece_at((col, row))  # if there is no piece target_piece is None
-            print(target_piece)
             if target_piece and target_piece.color != current_player:
                 if target_piece.color == 'white':
                     white_pieces.remove(target_piece)
@@ -318,8 +315,7 @@ def handle_click(pos):
                     black_pieces.remove(target_piece)
             board.move_piece(selected_piece, (col, row))
             if checkmate(board, current_player):
-                print("checkmate")
-            print('piece moved')
+                print('checkmate')
             if current_player == 'white':
                 current_player = 'black'
             else:
@@ -349,6 +345,6 @@ while run:
             run = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             handle_click(pygame.mouse.get_pos())
-            # After you click the piece, before doing anything, call this debug function:
+    draw_valid_moves(valid_moves)
     pygame.display.flip()  # displays on screen
 pygame.quit()
