@@ -200,9 +200,9 @@ class Bishop(Piece):
             nx, ny = x, y
             while 0 <= nx + dx < 8 and 0 <= ny + dy < 8:
                 nx, ny = nx + dx, ny + dy
-                if board[nx][ny] is None:
+                if board.get_piece_at((nx,ny)) is None:
                     moves.append((nx, ny))
-                elif board[nx][ny].color != self.color:
+                elif board.get_piece_at((nx,ny)).color != self.color:
                     moves.append((nx, ny))
                     break
                 else:
@@ -227,7 +227,7 @@ class King(Piece):
         # One square in any direction
         for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)]:
             nx, ny = x + dx, y + dy
-            if 0 <= nx < 8 and 0 <= ny < 8 and (board[nx][ny] is None or board[nx][ny].color != self.color):
+            if 0 <= nx < 8 and 0 <= ny < 8 and (board.get_piece_at((nx,ny)) is None or board.get_piece_at((nx,ny)).color != self.color):
                 moves.append((nx, ny))
 
         return moves
