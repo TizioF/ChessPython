@@ -44,6 +44,27 @@ piece_list=['Pawn','Queen','King','Knight','Rook','Bishop'] #list to know the in
 
 
 
+class Board:
+    def __init__(self):
+        # Create an 8x8 board, initially empty (None)
+        self.board = [[None for _ in range(8)] for _ in range(8)]
+
+    def get_piece_at(self, position):
+        row, col = position
+        return self.board[col][row]
+
+    def set_piece_at(self, position, piece):
+        row, col = position
+        self.board[col][row] = piece
+
+    def move_piece(self, piece, new_position):
+        old_position = piece.position
+        self.set_piece_at(new_position, piece)
+        self.set_piece_at(old_position, None)
+        piece.position = new_position
+
+
+
 # Check if a King is in Check
 def is_in_check(king_pos, color, board):
     # Simplified version: check if any opponent piece can attack the king's position
@@ -95,11 +116,7 @@ class Piece:
         self.color = color
         self.position = position
 
-    def valid_moves(self, selected_pos, board):
-        pass
-
-
-def valid_moves(self, position, board):
+    def valid_moves(self, position, board):
         """Override in child classes to define specific move logic."""
         return []
 
@@ -109,16 +126,20 @@ class Pawn(Piece):
         """Define valid moves for a Pawn."""
         x, y = position
         moves = []
-        direction = -1 if self.color == 'white' else 1  # White moves up, black moves down
+        direction = 1 if self.color == 'white' else -1  # White moves down, black moves up
 
         # Basic forward move
-        if 0 <= x + direction < 8 and board[x + direction][y] is None:
-            moves.append((x + direction, y))
+        if 0 <= x + direction < 8:
+            print('im here')
+            forward_piece = board.get_piece_at((x + direction, y)) #checks if there is a piece in front
+            print(forward_piece)
+            if forward_piece is None:
+                moves.append((x + direction, y))
 
         # Capture diagonally
         for dx in [-1, 1]:
             if 0 <= x + direction < 8 and 0 <= y + dx < 8:
-                target = board[x + direction][y + dx]
+                target = board.get_piece_at((x + direction, y + dx))
                 if target and target.color != self.color:
                     moves.append((x + direction, y + dx))
 
@@ -208,22 +229,22 @@ class King(Piece):
 
 #game variables
 white_pieces = [
-    Piece('Rook', 'white', (0, 0)), Piece('Knight', 'white', (1, 0)), Piece('Bishop', 'white', (2, 0)),
-    Piece('Queen', 'white', (3, 0)), Piece('King', 'white', (4, 0)), Piece('Bishop', 'white', (5, 0)),
-    Piece('Knight', 'white', (6, 0)), Piece('Rook', 'white', (7, 0)),
-    Piece('Pawn', 'white', (0, 1)), Piece('Pawn', 'white', (1, 1)), Piece('Pawn', 'white', (2, 1)),
-    Piece('Pawn', 'white', (3, 1)), Piece('Pawn', 'white', (4, 1)), Piece('Pawn', 'white', (5, 1)),
-    Piece('Pawn', 'white', (6, 1)), Piece('Pawn', 'white', (7, 1)),
+    Rook('Rook', 'white', (0, 0)), Knight('Knight', 'white', (1, 0)), Bishop('Bishop', 'white', (2, 0)),
+    Queen('Queen', 'white', (3, 0)), King('King', 'white', (4, 0)), Bishop('Bishop', 'white', (5, 0)),
+    Knight('Knight', 'white', (6, 0)), Rook('Rook', 'white', (7, 0)),
+    Pawn('Pawn', 'white', (0, 1)), Pawn('Pawn', 'white', (1, 1)), Pawn('Pawn', 'white', (2, 1)),
+    Pawn('Pawn', 'white', (3, 1)), Pawn('Pawn', 'white', (4, 1)), Pawn('Pawn', 'white', (5, 1)),
+    Pawn('Pawn', 'white', (6, 1)), Pawn('Pawn', 'white', (7, 1)),
 ]
 
 # Initialize black pieces
 black_pieces = [
-    Piece('Rook', 'black', (0, 7)), Piece('Knight', 'black', (1, 7)), Piece('Bishop', 'black', (2, 7)),
-    Piece('Queen', 'black', (3, 7)), Piece('King', 'black', (4, 7)), Piece('Bishop', 'black', (5, 7)),
-    Piece('Knight', 'black', (6, 7)), Piece('Rook', 'black', (7, 7)),
-    Piece('Pawn', 'black', (0, 6)), Piece('Pawn', 'black', (1, 6)), Piece('Pawn', 'black', (2, 6)),
-    Piece('Pawn', 'black', (3, 6)), Piece('Pawn', 'black', (4, 6)), Piece('Pawn', 'black', (5, 6)),
-    Piece('Pawn', 'black', (6, 6)), Piece('Pawn', 'black', (7, 6)),
+    Rook('Rook', 'black', (0, 7)), Knight('Knight', 'black', (1, 7)), Bishop('Bishop', 'black', (2, 7)),
+    Queen('Queen', 'black', (3, 7)), King('King', 'black', (4, 7)), Bishop('Bishop', 'black', (5, 7)),
+    Knight('Knight', 'black', (6, 7)), Rook('Rook', 'black', (7, 7)),
+    Pawn('Pawn', 'black', (0, 6)), Pawn('Pawn', 'black', (1, 6)), Pawn('Pawn', 'black', (2, 6)),
+    Pawn('Pawn', 'black', (3, 6)), Pawn('Pawn', 'black', (4, 6)), Pawn('Pawn', 'black', (5, 6)),
+    Pawn('Pawn', 'black', (6, 6)), Pawn('Pawn', 'black', (7, 6)),
 ]
 
 def draw_board():
@@ -247,50 +268,65 @@ def visualize_piece():
         x = piece_list.index(piece.type)
         screen.blit(b_images[x], (piece.position[0] * 100 + 10, piece.position[1] * 100 + 10))
 
+selected_piece = None
+selected_pos = None
 
 # Handle Mouse Clicks and Piece Capture
 def handle_click(pos):
     global selected_piece, selected_pos, current_player
+    print (selected_piece)
+    print(current_player)
+    print(pos)
     col, row = pos[0] // 100, pos[1] // 100
-
+    #print(board.get_piece_at((col,row)))
     if selected_piece is None:
-        for piece in white_pieces if current_player == 'white' else black_pieces:
-            if piece.position == (col, row):
-                selected_piece = piece
-                selected_pos = piece.position
-                break
+        piece = board.get_piece_at((col, row))
+        if piece and piece.color == current_player:
+            selected_piece = piece
+            selected_pos = piece.position
+            print('clicked piece!')
+            print(selected_piece.type)
     else:
-        if (row, col) in selected_piece.valid_moves(selected_pos, white_pieces + black_pieces): #white + black is to check valid moves knowing where every piece is
+        print('new')
+        print(selected_piece.valid_moves(selected_pos, board))
+        if (row, col) in selected_piece.valid_moves(selected_pos, board):
             # Capture the opponent's piece
-            target_piece = None
-            for piece in white_pieces + black_pieces:
-                if piece.position == (row, col):
-                    target_piece = piece
-                    break
+            target_piece = board.get_piece_at((row, col)) #if there is no piece target_piece is None
             if target_piece and target_piece.color != current_player:
                 if target_piece.color=='white':
                     white_pieces.remove(target_piece)
                 else:
                     black_pieces.remove(target_piece)
-                selected_piece.position = (row, col)
-            elif not target_piece:
-                selected_piece.position = (row, col)
-            current_player = 'black' if current_player == 'white' else 'white'
+            board.move_piece(selected_piece, (row, col))
+            print('piece moved')
+            if current_player=='white':
+                current_player='black'
+            else:
+                current_player='white'
         selected_piece = None
         selected_pos = None
 
 #game loop and close window on quit
 run=True
 
+current_player='white'
+
+board = Board()
+for piece in white_pieces:
+    board.set_piece_at(piece.position, piece)
+for piece in black_pieces:
+    board.set_piece_at(piece.position, piece)
+
 while run:
     timer.tick(fps)
     screen.fill('dark gray')
     draw_board()
     visualize_piece()
-
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             run=False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            handle_click(pygame.mouse.get_pos())
 
     pygame.display.flip() #displays on screen
 pygame.quit()
