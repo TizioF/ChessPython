@@ -9,15 +9,7 @@ font = pygame.font.Font('freesansbold.ttf', 20)
 timer = pygame.time.Clock()
 fps=60
 
-#game variables
-white_pieces = ['rook','knight','bishop','king','queen','bishop','knight','rook',
-                'pawn','pawn','pawn','pawn','pawn','pawn','pawn','pawn'] #pieces on the board
-w_location= [(0,0), (1,0), (2,0), (3,0), (4,0), (5,0), (6,0), (7,0),
-             (0,1), (1,1), (2,1), (3,1), (4,1), (5,1), (6,1), (7,1)] #location of the pieces
-black_pieces = ['rook','knight','bishop','king','queen','bishop','knight','rook',
-                'pawn','pawn','pawn','pawn','pawn','pawn','pawn','pawn']
-b_location= [(0,7), (1,7), (2,7), (3,7), (4,7), (5,7), (6,7), (7,7),
-             (0,6), (1,6), (2,6), (3,6), (4,6), (5,6), (6,6), (7,6)]
+
 
 #load images in game
 DEFAULT_IMAGE_SIZE=(80,80)
@@ -51,35 +43,63 @@ b_images=[black_pawn,black_queen,black_king,black_knight,black_rook,black_bishop
 piece_list=['pawn','queen','king','knight','rook','bishop'] #list to know the index of the piece
 
 
-def draw_board():
-    for i in range(32):
-        column = i % 4
-        row = i // 4
-        if row % 2 == 0:
-            pygame.draw.rect(screen, 'light gray', [600 - (column * 200), row * 100, 100, 100])
-        else:
-            pygame.draw.rect(screen, 'light gray', [700 - (column * 200), row * 100, 100, 100])
-    pass
+
+# Check if a King is in Check
+def is_in_check(king_pos, color, board):
+    # Simplified version: check if any opponent piece can attack the king's position
+    opponent_color = 'white' if color == 'black' else 'black'
+    for row in range(8):
+        for col in range(8):
+            piece = board[row][col]
+            if piece and piece.color == opponent_color:
+                if (row, col) in piece.valid_moves(king_pos, board):
+                    return True
+    return False
 
 
-#visualize pieces on board
-def visualize_piece():
-    for i in range(len(white_pieces)):
-        x = piece_list.index(white_pieces[i])
-        screen.blit(w_images[x],(w_location[i][0]*100+10, w_location[i][1]*100+10)) #visualize piece on board and offsets it to the center of the square
+# Checkmate condition
+def is_checkmate(color, board):
+    king_pos = None
+    for row in range(8):
+        for col in range(8):
+            piece = board[row][col]
+            if isinstance(piece, King) and piece.color == color:
+                king_pos = (row, col)
+                break
 
-    for i in range(len(black_pieces)):
-        x = piece_list.index(black_pieces[i])
-        screen.blit(b_images[x], (b_location[i][0] * 100 + 10, b_location[i][1] * 100 + 10))
+    if not king_pos:
+        return False  # No king found for some reason, shouldn't happen
+
+    if is_in_check(king_pos, color, board):
+        # Check if there are any valid moves to escape the check
+        for row in range(8):
+            for col in range(8):
+                piece = board[row][col]
+                if piece and piece.color == color:
+                    for move in piece.valid_moves((row, col), board):
+                        temp_board = [row[:] for row in board]
+                        temp_board[move[0]][move[1]] = piece
+                        temp_board[row][col] = None
+                        if not is_in_check(move, color, temp_board):
+                            return False  # There is a move that can escape check
+        return True  # No escape moves found, it's checkmate
+    return False  # It's not checkmate if the king isn't in check
+
 
 
 class Piece:
     """Base class for all chess pieces."""
 
-    def __init__(self, color):
-        self.color = color  # 'white' or 'black'
+    def __init__(self,types ,color, position):
+        self.type = types
+        self.color = color
+        self.position = position
 
-    def valid_moves(self, position, board):
+    def valid_moves(self, selected_pos, board):
+        pass
+
+
+def valid_moves(self, position, board):
         """Override in child classes to define specific move logic."""
         return []
 
@@ -185,6 +205,79 @@ class King(Piece):
                 moves.append((nx, ny))
 
         return moves
+
+#game variables
+white_pieces = [
+    Piece('Rook', 'white', (0, 0)), Piece('Knight', 'white', (1, 0)), Piece('Bishop', 'white', (2, 0)),
+    Piece('Queen', 'white', (3, 0)), Piece('King', 'white', (4, 0)), Piece('Bishop', 'white', (5, 0)),
+    Piece('knight', 'white', (6, 0)), Piece('Rook', 'white', (7, 0)),
+    Piece('Pawn', 'white', (0, 1)), Piece('Pawn', 'white', (1, 1)), Piece('Pawn', 'white', (2, 1)),
+    Piece('Pawn', 'white', (3, 1)), Piece('Pawn', 'white', (4, 1)), Piece('Pawn', 'white', (5, 1)),
+    Piece('Pawn', 'white', (6, 1)), Piece('Pawn', 'white', (7, 1)),
+]
+
+# Initialize black pieces
+black_pieces = [
+    Piece('Rook', 'black', (0, 7)), Piece('Knight', 'black', (1, 7)), Piece('Bishop', 'black', (2, 7)),
+    Piece('Queen', 'black', (3, 7)), Piece('King', 'black', (4, 7)), Piece('Bishop', 'black', (5, 7)),
+    Piece('Knight', 'black', (6, 7)), Piece('Rook', 'black', (7, 7)),
+    Piece('Pawn', 'black', (0, 6)), Piece('Pawn', 'black', (1, 6)), Piece('Pawn', 'black', (2, 6)),
+    Piece('Pawn', 'black', (3, 6)), Piece('Pawn', 'black', (4, 6)), Piece('Pawn', 'black', (5, 6)),
+    Piece('Pawn', 'black', (6, 6)), Piece('Pawn', 'black', (7, 6)),
+]
+
+def draw_board():
+    for i in range(32):
+        column = i % 4
+        row = i // 4
+        if row % 2 == 0:
+            pygame.draw.rect(screen, 'light gray', [600 - (column * 200), row * 100, 100, 100])
+        else:
+            pygame.draw.rect(screen, 'light gray', [700 - (column * 200), row * 100, 100, 100])
+    pass
+
+
+#visualize pieces on board
+def visualize_piece():
+    for i in range(len(white_pieces)):
+        x = piece_list.index(white_pieces[i])
+        screen.blit(w_images[x],(w_location[i][0]*100+10, w_location[i][1]*100+10)) #visualize piece on board and offsets it to the center of the square
+
+    for i in range(len(black_pieces)):
+        x = piece_list.index(black_pieces[i])
+        screen.blit(b_images[x], (b_location[i][0] * 100 + 10, b_location[i][1] * 100 + 10))
+
+
+# Handle Mouse Clicks and Piece Capture
+def handle_click(pos):
+    global selected_piece, selected_pos, current_player
+    col, row = pos[0] // 100, pos[1] // 100
+
+    if selected_piece is None:
+        for piece in white_pieces if current_player == 'white' else black_pieces:
+            if piece.position == (col, row):
+                selected_piece = piece
+                selected_pos = piece.position
+                break
+    else:
+        if (row, col) in selected_piece.valid_moves(selected_pos, white_pieces + black_pieces): #white + black is to check valid moves knowing where every piece is
+            # Capture the opponent's piece
+            target_piece = None
+            for piece in white_pieces + black_pieces:
+                if piece.position == (row, col):
+                    target_piece = piece
+                    break
+            if target_piece and target_piece.color != current_player:
+                if target_piece.color=='white':
+                    white_pieces.remove(target_piece)
+                else:
+                    black_pieces.remove(target_piece)
+                selected_piece.position = (row, col)
+            elif not target_piece:
+                selected_piece.position = (row, col)
+            current_player = 'black' if current_player == 'white' else 'white'
+        selected_piece = None
+        selected_pos = None
 
 #game loop and close window on quit
 run=True
