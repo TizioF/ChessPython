@@ -105,7 +105,6 @@ def checkmate(board, color):
 
     return True  # No moves can save the king, it's checkmate
 
-
 def simulate_move(board, from_pos, to_pos):
     # Create a deep copy of the board to simulate the move
     temp_board = copy.deepcopy(board)
