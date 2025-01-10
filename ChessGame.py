@@ -286,6 +286,8 @@ def handle_click(pos):
    # print(current_player)
    # print(pos)
     col, row = pos[0] // 100, pos[1] // 100
+    print(col)
+    print(row)
     print(board.get_piece_at((col,row)))
     #print(board.get_piece_at((col,row)))
     if selected_piece is None:
@@ -298,7 +300,7 @@ def handle_click(pos):
     else:
         print('enter the else to move')
 
-        if (row, col) in selected_piece.valid_moves(selected_pos, board):
+        if (col, row) in selected_piece.valid_moves(selected_pos, board):
             # Capture the opponent's piece
             print('enter the if')
             target_piece = board.get_piece_at((col, row)) #if there is no piece target_piece is None
@@ -308,7 +310,7 @@ def handle_click(pos):
                     white_pieces.remove(target_piece)
                 else:
                     black_pieces.remove(target_piece)
-            board.move_piece(selected_piece, (row, col))
+            board.move_piece(selected_piece, (col, row))
             print('piece moved')
             if current_player=='white':
                 current_player='black'
