@@ -124,27 +124,38 @@ class Piece:
 
 class Pawn(Piece):
     def valid_moves(self, position, board):
-        """Define valid moves for a Pawn."""
-        x, y = position
-        moves = []
-        direction = 1 if self.color == 'white' else -1  # White moves down, black moves up
+  """Define valid moves for a Pawn."""
+        col, row = position
+        moves = []
+        direction = 1 if self.color == 'white' else -1  # White moves up, black moves down
 
-        # Basic forward move
-        if 0 <= x + direction < 8:
-            print('im here')
-            forward_piece = board.get_piece_at((x + direction, y)) #checks if there is a piece in front
-            print(forward_piece)
-            if forward_piece is None:
-                moves.append((x + direction, y))
+        print(f"Calculating moves for Pawn at position: {position}, direction: {direction}")
 
-        # Capture diagonally
-        for dx in [-1, 1]:
-            if 0 <= x + direction < 8 and 0 <= y + dx < 8:
-                target = board.get_piece_at((x + direction, y + dx))
-                if target and target.color != self.color:
-                    moves.append((x + direction, y + dx))
+      
+        if 0 <= row + direction < 8:
+            forward_piece = board.get_piece_at((col, row + direction))
+            print(f"Forward move check: Position ({col}, {row + direction}), Found: {forward_piece}")
+            if forward_piece is None:
+                moves.append((col, row + direction))
 
-        return moves
+                
+                if (self.color == 'white' and row == 1) or (self.color == 'black' and row == 6):
+                    two_step_piece = board.get_piece_at((col, row + 2 * direction))
+                    print(f"Two-step move check: Position ({col}, {row + 2 * direction}), Found: {two_step_piece}")
+                    if two_step_piece is None:
+                        moves.append((col, row + 2 * direction))
+
+        
+        for dx in [-1, 1]:
+            if 0 <= col + dx < 8 and 0 <= row + direction < 8:
+                target = board.get_piece_at((col + dx, row + direction))
+                print(f"Diagonal capture check: Position ({col + dx}, {row + direction}), Found: {target}")
+                if target and target.color != self.color:
+                    moves.append((col + dx, row + direction))
+
+        print(f"Valid moves for Pawn at {position}: {moves}")
+        return moves
+   
 
 
 class Rook(Piece):
