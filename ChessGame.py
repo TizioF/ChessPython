@@ -140,8 +140,8 @@ class Pawn(Piece):
                 if (self.color == 'white' and row == 1) or (self.color == 'black' and row == 6):
                     two_step_piece = board.get_piece_at((col, row + 2 * direction))
                     print(f"Two-step move check: Position ({col}, {row + 2 * direction}), Found: {two_step_piece}")
-                    #if two_step_piece is None:
-                       # moves.append((col, row + 2 * direction))
+                    if two_step_piece is None:
+                        moves.append((col, row + 2 * direction))
 
         for dx in [-1, 1]:
             if 0 <= col + dx < 8 and 0 <= row + direction < 8:
