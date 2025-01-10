@@ -40,7 +40,7 @@ white_king=pygame.transform.scale(white_king, DEFAULT_IMAGE_SIZE)
 
 w_images=[white_pawn,white_queen,white_king,white_knight,white_rook,white_bishop]
 b_images=[black_pawn,black_queen,black_king,black_knight,black_rook,black_bishop]
-piece_list=['pawn','queen','king','knight','rook','bishop'] #list to know the index of the piece
+piece_list=['Pawn','Queen','King','Knight','Rook','Bishop'] #list to know the index of the piece
 
 
 
@@ -210,7 +210,7 @@ class King(Piece):
 white_pieces = [
     Piece('Rook', 'white', (0, 0)), Piece('Knight', 'white', (1, 0)), Piece('Bishop', 'white', (2, 0)),
     Piece('Queen', 'white', (3, 0)), Piece('King', 'white', (4, 0)), Piece('Bishop', 'white', (5, 0)),
-    Piece('knight', 'white', (6, 0)), Piece('Rook', 'white', (7, 0)),
+    Piece('Knight', 'white', (6, 0)), Piece('Rook', 'white', (7, 0)),
     Piece('Pawn', 'white', (0, 1)), Piece('Pawn', 'white', (1, 1)), Piece('Pawn', 'white', (2, 1)),
     Piece('Pawn', 'white', (3, 1)), Piece('Pawn', 'white', (4, 1)), Piece('Pawn', 'white', (5, 1)),
     Piece('Pawn', 'white', (6, 1)), Piece('Pawn', 'white', (7, 1)),
@@ -239,13 +239,13 @@ def draw_board():
 
 #visualize pieces on board
 def visualize_piece():
-    for i in range(len(white_pieces)):
-        x = piece_list.index(white_pieces[i])
-        screen.blit(w_images[x],(w_location[i][0]*100+10, w_location[i][1]*100+10)) #visualize piece on board and offsets it to the center of the square
+    for piece in white_pieces:
+        x = piece_list.index(piece.type)
+        screen.blit(w_images[x], (piece.position[0] * 100 + 10, piece.position[1] * 100 + 10))
 
-    for i in range(len(black_pieces)):
-        x = piece_list.index(black_pieces[i])
-        screen.blit(b_images[x], (b_location[i][0] * 100 + 10, b_location[i][1] * 100 + 10))
+    for piece in black_pieces:
+        x = piece_list.index(piece.type)
+        screen.blit(b_images[x], (piece.position[0] * 100 + 10, piece.position[1] * 100 + 10))
 
 
 # Handle Mouse Clicks and Piece Capture
