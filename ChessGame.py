@@ -50,12 +50,12 @@ class Board:
         self.board = [[None for _ in range(8)] for _ in range(8)]
 
     def get_piece_at(self, position):
-        row, col = position
-        return self.board[col][row]
+        col, row = position
+        return self.board[row][col]
 
     def set_piece_at(self, position, piece):
-        row, col = position
-        self.board[col][row] = piece
+        col, row = position
+        self.board[row][col] = piece
 
     def move_piece(self, piece, new_position):
         old_position = piece.position
@@ -105,6 +105,7 @@ def is_checkmate(color, board):
                             return False  # There is a move that can escape check
         return True  # No escape moves found, it's checkmate
     return False  # It's not checkmate if the king isn't in check
+
 
 
 
@@ -274,10 +275,10 @@ selected_pos = None
 # Handle Mouse Clicks and Piece Capture
 def handle_click(pos):
     global selected_piece, selected_pos, current_player
-    print (selected_piece)
-    print(current_player)
-    print(pos)
+   # print(current_player)
+   # print(pos)
     col, row = pos[0] // 100, pos[1] // 100
+    print(board.get_piece_at((col,row)))
     #print(board.get_piece_at((col,row)))
     if selected_piece is None:
         piece = board.get_piece_at((col, row))
@@ -287,11 +288,11 @@ def handle_click(pos):
             print('clicked piece!')
             print(selected_piece.type)
     else:
-        print('new')
         print(selected_piece.valid_moves(selected_pos, board))
         if (row, col) in selected_piece.valid_moves(selected_pos, board):
             # Capture the opponent's piece
-            target_piece = board.get_piece_at((row, col)) #if there is no piece target_piece is None
+            target_piece = board.get_piece_at((col, row)) #if there is no piece target_piece is None
+            print(target_piece)
             if target_piece and target_piece.color != current_player:
                 if target_piece.color=='white':
                     white_pieces.remove(target_piece)
@@ -327,6 +328,7 @@ while run:
             run=False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             handle_click(pygame.mouse.get_pos())
+            # After you click the piece, before doing anything, call this debug function:
 
     pygame.display.flip() #displays on screen
 pygame.quit()
