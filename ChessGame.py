@@ -129,24 +129,20 @@ class Pawn(Piece):
         moves = []
         direction = 1 if self.color == 'white' else -1  # White moves down, black moves up
 
-        print(f"Calculating moves for Pawn at position: {position}, direction: {direction}")
 
         if 0 <= row + direction < 8:
             forward_piece = board.get_piece_at((col, row + direction))
-            print(f"Forward move check: Position ({col}, {row + direction}), Found: {forward_piece}")
             if forward_piece is None:
                 moves.append((col, row + direction))
 
                 if (self.color == 'white' and row == 1) or (self.color == 'black' and row == 6):
                     two_step_piece = board.get_piece_at((col, row + 2 * direction))
-                    print(f"Two-step move check: Position ({col}, {row + 2 * direction}), Found: {two_step_piece}")
                     if two_step_piece is None:
                         moves.append((col, row + 2 * direction))
 
         for dx in [-1, 1]:
             if 0 <= col + dx < 8 and 0 <= row + direction < 8:
                 target = board.get_piece_at((col + dx, row + direction))
-                print(f"Diagonal capture check: Position ({col + dx}, {row + direction}), Found: {target}")
                 if target and target.color != self.color:
                     moves.append((col + dx, row + direction))
 
@@ -166,9 +162,9 @@ class Rook(Piece):
             nx, ny = x, y
             while 0 <= nx + dx < 8 and 0 <= ny + dy < 8:
                 nx, ny = nx + dx, ny + dy
-                if board[nx][ny] is None:
+                if board.get_piece_at((nx,ny)) is None:
                     moves.append((nx, ny))
-                elif board[nx][ny].color != self.color:
+                elif board.get_piece_at((nx, ny)).color != self.color:
                     moves.append((nx, ny))
                     break
                 else:
