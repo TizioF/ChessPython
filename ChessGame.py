@@ -59,8 +59,8 @@ class Board:
 
     def move_piece(self, piece, new_position):
         old_position = piece.position
-        self.set_piece_at(new_position, piece)
         self.set_piece_at(old_position, None)
+        self.set_piece_at(new_position, piece)
         piece.position = new_position
 
 
@@ -124,37 +124,34 @@ class Piece:
 
 class Pawn(Piece):
     def valid_moves(self, position, board):
-  """Define valid moves for a Pawn."""
-        col, row = position
-        moves = []
-        direction = 1 if self.color == 'white' else -1  # White moves up, black moves down
+        """Define valid moves for a Pawn."""
+        col, row = position
+        moves = []
+        direction = 1 if self.color == 'white' else -1  # White moves down, black moves up
 
-        print(f"Calculating moves for Pawn at position: {position}, direction: {direction}")
+        print(f"Calculating moves for Pawn at position: {position}, direction: {direction}")
 
-      
-        if 0 <= row + direction < 8:
-            forward_piece = board.get_piece_at((col, row + direction))
-            print(f"Forward move check: Position ({col}, {row + direction}), Found: {forward_piece}")
-            if forward_piece is None:
-                moves.append((col, row + direction))
+        if 0 <= row + direction < 8:
+            forward_piece = board.get_piece_at((col, row + direction))
+            print(f"Forward move check: Position ({col}, {row + direction}), Found: {forward_piece}")
+            if forward_piece is None:
+                moves.append((col, row + direction))
 
-                
-                if (self.color == 'white' and row == 1) or (self.color == 'black' and row == 6):
-                    two_step_piece = board.get_piece_at((col, row + 2 * direction))
-                    print(f"Two-step move check: Position ({col}, {row + 2 * direction}), Found: {two_step_piece}")
-                    if two_step_piece is None:
-                        moves.append((col, row + 2 * direction))
+                if (self.color == 'white' and row == 1) or (self.color == 'black' and row == 6):
+                    two_step_piece = board.get_piece_at((col, row + 2 * direction))
+                    print(f"Two-step move check: Position ({col}, {row + 2 * direction}), Found: {two_step_piece}")
+                    #if two_step_piece is None:
+                       # moves.append((col, row + 2 * direction))
 
-        
-        for dx in [-1, 1]:
-            if 0 <= col + dx < 8 and 0 <= row + direction < 8:
-                target = board.get_piece_at((col + dx, row + direction))
-                print(f"Diagonal capture check: Position ({col + dx}, {row + direction}), Found: {target}")
-                if target and target.color != self.color:
-                    moves.append((col + dx, row + direction))
+        for dx in [-1, 1]:
+            if 0 <= col + dx < 8 and 0 <= row + direction < 8:
+                target = board.get_piece_at((col + dx, row + direction))
+                print(f"Diagonal capture check: Position ({col + dx}, {row + direction}), Found: {target}")
+                if target and target.color != self.color:
+                    moves.append((col + dx, row + direction))
 
-        print(f"Valid moves for Pawn at {position}: {moves}")
-        return moves
+        print(f"Valid moves for Pawn at {position}: {moves}")
+        return moves
    
 
 
@@ -299,9 +296,11 @@ def handle_click(pos):
             print('clicked piece!')
             print(selected_piece.type)
     else:
-        print(selected_piece.valid_moves(selected_pos, board))
+        print('enter the else to move')
+
         if (row, col) in selected_piece.valid_moves(selected_pos, board):
             # Capture the opponent's piece
+            print('enter the if')
             target_piece = board.get_piece_at((col, row)) #if there is no piece target_piece is None
             print(target_piece)
             if target_piece and target_piece.color != current_player:
