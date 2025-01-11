@@ -45,7 +45,7 @@ piece_list = ['Pawn', 'Queen', 'King', 'Knight', 'Rook', 'Bishop']  # list to kn
 
 class Board:
     def __init__(self):
-        # Create an 8x8 board, initially empty (None)
+        # Create an 8x8 board
         self.board = [[None for _ in range(8)] for _ in range(8)]
 
     def get_piece_at(self, position):
@@ -100,12 +100,12 @@ def checkmate(board, color):
                     # Check if the king is still in check after the move
                     is_in_check, _, _ = check(temp_board, color)
                     if not is_in_check:
-                        return False  # Found a move that saves the king from check
+                        return False
 
     return True  # No moves can save the king, it's checkmate
 
 def simulate_move(board, from_pos, to_pos):
-    # Create a deep copy of the board to simulate the move
+    # Create a copy of the board to simulate the move
     temp_board = copy.deepcopy(board)
 
     # Get the piece and move it
@@ -273,7 +273,7 @@ def draw_board():
 def draw_valid_moves(valid_moves):
     for move in valid_moves:
         col, row = move
-        pygame.draw.circle(screen, 'yellow', (col * 100 + 50, row * 100 + 50),10)  # Draw circle in the center of the square
+        pygame.draw.circle(screen, 'yellow', (col * 100 + 50, row * 100 + 50),10)
 
 # visualize pieces on board
 def visualize_piece():
@@ -291,10 +291,9 @@ def draw_check():
         pygame.draw.rect(screen, 'dark red', [kingpos[0]*100+1,kingpos[1]*100+1,100,100], 5)
 
 def draw_bottom_bar():
-    # Draw a 100px high bar at the bottom
     pygame.draw.rect(screen, (50, 50, 50), pygame.Rect(0, HEIGHT - 100, WIDTH, 100))
 
-    # Draw the turn text in the middle of the bottom bar
+    #checks if it's checkmate to display it on screen
     if checkmate(board, current_player):
         text = font.render(f"{current_player.capitalize()} is on checkmate! The game is over", True, (255, 255, 255))
     else:
@@ -360,9 +359,8 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        elif event.type == pygame.MOUSEBUTTONDOWN and checkmate(board, current_player) ==False:
+        elif event.type == pygame.MOUSEBUTTONDOWN and checkmate(board, current_player) ==False: #if it's checkmate game ends and no player can move pieces anymore
             handle_click(pygame.mouse.get_pos())
     draw_valid_moves(valid_moves)
-    #draw_bottom_bar()
     pygame.display.flip()  # displays on screen
 pygame.quit()
