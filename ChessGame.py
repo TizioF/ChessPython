@@ -116,7 +116,6 @@ def simulate_move(board, from_pos, to_pos):
 
 
 class Piece:
-    """Base class for all chess pieces."""
 
     def __init__(self, types, color, position):
         self.type = types
@@ -124,7 +123,6 @@ class Piece:
         self.position = position
 
     def valid_moves(self, position, board):
-        """Override in child classes to define specific move logic."""
         return []
 
 
