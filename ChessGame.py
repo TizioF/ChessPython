@@ -1,5 +1,6 @@
 import pygame
 import copy
+import time
 
 pygame.init()  # initialize the package
 
@@ -285,13 +286,25 @@ def visualize_piece():
         screen.blit(b_images[x], (piece.position[0] * 100 + 10, piece.position[1] * 100 + 10))
 
 
+def draw_bottom_bar():
+    # Draw a 100px high bar at the bottom
+    pygame.draw.rect(screen, (50, 50, 50), pygame.Rect(0, HEIGHT - 100, WIDTH, 100))
+
+    # Draw the turn text in the middle of the bottom bar
+    if checkmate(board, current_player):
+        text=font.render(f"{current_player.capitalize()} is on checkmate", True, (255, 255, 255))
+    else:
+        text = font.render(f"{current_player.capitalize()}'s Turn", True, (255, 255, 255))
+    screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT - 80))
+
+
 selected_piece = None
 selected_pos = None
 valid_moves=[]
 
 # Handle Mouse Clicks and Piece Capture
 def handle_click(pos):
-    global selected_piece, selected_pos, current_player, valid_moves
+    global selected_piece, selected_pos, current_player, valid_moves, checked
 
     col, row = pos[0] // 100, pos[1] // 100
 
@@ -314,8 +327,6 @@ def handle_click(pos):
                 else:
                     black_pieces.remove(target_piece)
             board.move_piece(selected_piece, (col, row))
-            if checkmate(board, current_player):
-                print('checkmate')
             if current_player == 'white':
                 current_player = 'black'
             else:
@@ -346,5 +357,6 @@ while run:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             handle_click(pygame.mouse.get_pos())
     draw_valid_moves(valid_moves)
+    #draw_bottom_bar()
     pygame.display.flip()  # displays on screen
 pygame.quit()
