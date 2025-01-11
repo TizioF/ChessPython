@@ -72,12 +72,11 @@ def check(board, color):
         for col in range(8):
             piece = board.get_piece_at((col, row))
             if piece:
-                if piece.color == color:
+                if piece.color != color:
                     moves.extend(piece.valid_moves((col, row), board))  # Valid moves of opponent pieces
-                elif isinstance(piece, King) and piece.color != color:
+                elif isinstance(piece, King) and piece.color == color:
                     king_pos = (col, row)  # Position of the player's king
 
-    # If any opponent piece can attack the player's king position, it's check
     if king_pos in moves:
         return True, king_pos, moves
     return False, king_pos, moves
@@ -92,7 +91,7 @@ def checkmate(board, color):
     for row in range(8):
         for col in range(8):
             piece = board.get_piece_at((col, row))
-            if piece and piece.color != color:
+            if piece and piece.color == color:
                 # Get valid moves for this piece
                 for move in piece.valid_moves((col, row), board):
                     # Simulate the move
@@ -285,6 +284,13 @@ def visualize_piece():
         x = piece_list.index(piece.type)
         screen.blit(b_images[x], (piece.position[0] * 100 + 10, piece.position[1] * 100 + 10))
 
+def draw_check():
+    ischeck, kingpos, _=check(board, current_player)
+    if ischeck:
+        pygame.draw.rect(screen, 'dark red', [kingpos[0]*100+1,kingpos[1]*100+1,100,100], 5)
+    elif checkmate(board, current_player):
+        text = font.render(f"{current_player.capitalize()} is on checkmate", True, (255, 255, 255))
+        screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT - 80))
 
 def draw_bottom_bar():
     # Draw a 100px high bar at the bottom
@@ -352,6 +358,7 @@ while run:
     draw_board()
     draw_bottom_bar()
     visualize_piece()
+    draw_check()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
