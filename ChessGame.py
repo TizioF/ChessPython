@@ -259,6 +259,7 @@ black_pieces = [
 ]
 
 
+
 def draw_board():
     for i in range(32):
         column = i % 4
@@ -288,9 +289,6 @@ def draw_check():
     ischeck, kingpos, _=check(board, current_player)
     if ischeck:
         pygame.draw.rect(screen, 'dark red', [kingpos[0]*100+1,kingpos[1]*100+1,100,100], 5)
-    elif checkmate(board, current_player):
-        text = font.render(f"{current_player.capitalize()} is on checkmate", True, (255, 255, 255))
-        screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT - 80))
 
 def draw_bottom_bar():
     # Draw a 100px high bar at the bottom
@@ -298,7 +296,7 @@ def draw_bottom_bar():
 
     # Draw the turn text in the middle of the bottom bar
     if checkmate(board, current_player):
-        text=font.render(f"{current_player.capitalize()} is on checkmate", True, (255, 255, 255))
+        text = font.render(f"{current_player.capitalize()} is on checkmate! The game is over", True, (255, 255, 255))
     else:
         text = font.render(f"{current_player.capitalize()}'s Turn", True, (255, 255, 255))
     screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT - 80))
@@ -362,7 +360,7 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN and checkmate(board, current_player) ==False:
             handle_click(pygame.mouse.get_pos())
     draw_valid_moves(valid_moves)
     #draw_bottom_bar()
