@@ -350,6 +350,7 @@ while run:
     timer.tick(fps)
     screen.fill('dark gray')
     draw_board()
+    draw_bottom_bar()
     visualize_piece()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
